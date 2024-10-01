@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AuthPage = () => {
   const [currentForm, setCurrentForm] = useState("signIn"); // Start with Sign In form
@@ -34,18 +35,19 @@ const AuthPage = () => {
         formData.append(key, ownerData[key]);
       });
 
-      const response = await fetch('http://localhost:8000/api/v1/owner/registerOwner', {
-        method: 'POST',
-        body: formData, // Send form data with files
+      const response = await axios.post('http://localhost:8000/api/v1/owner/registerOwner',formData, {
+        headers: {
+          'Content-Type':'multipart/form-data',
+        } // Send form data with files
       });
 
-      const result = await response.json();
+      
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert('Owner registered successfully!');
-        navigate("/host-dashboard"); // Navigate to Host Dashboard after Registration
+        navigate("/HostDashboard"); // Navigate to Host Dashboard after Registration
       } else {
-        alert(`Error: ${result.message}`);
+        alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
       console.error('Error registering owner:', error);
