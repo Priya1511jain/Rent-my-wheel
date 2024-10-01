@@ -17,9 +17,9 @@ const ownerSchema = new Schema({
         type:String,
         required:[true,'Password is required']
     },
-    // refreshToken:{
+    refreshToken:{
 
-    // },
+    },
     contactNo:{
         type: String,
         required: true

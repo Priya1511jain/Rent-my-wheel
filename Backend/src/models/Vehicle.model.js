@@ -1,6 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose,{Schema} from 'mongoose';
 
-const { Schema, model } = mongoose;
 
 // Create a schema for the Vehicle
 const vehicleSchema = new Schema({
@@ -35,6 +34,4 @@ const vehicleSchema = new Schema({
     }, // Reference to the owner
 }, { timestamps: true });
 
-const Vehicle = model('Vehicle', vehicleSchema);
-
-export default Vehicle;
+export const Vehicle = mongoose.model("Vehicle", vehicleSchema);
