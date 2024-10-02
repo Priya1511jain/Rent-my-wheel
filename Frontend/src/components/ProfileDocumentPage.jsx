@@ -1,40 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, NavLink } from "react-router-dom";
-import ManageVehicles from "./ManageVehicles";
-import MyRentals from "./MyRentals";
-import Earnings from "./Earnings";
-import MyAccount from "./MyAccount";
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import ManageVehicles from './ManageVehicles';
+import MyRentals from './MyRentals';
+import Earnings from './Earnings';
+import MyAccount from './MyAccount';
 
 const ProfileDocumentPage = () => {
-  const [profile, setProfile] = useState(null); // Initialize with null to simulate loading
+    const location = useLocation();
+  const [profile, setProfile] = useState({
+    email: "15priya11jain@gmail.com",
+    mobile: "9329622029",
+    name: "Priya Jain",
+    gender: "Female",
+    city: "Indore",
+    address: "jabalpur naka",
+    aadharno: "234567892344",
+    aadharphoto: "img"
+  });
 
-  useEffect(() => {
-    // Simulate fetching profile data (replace with actual backend call)
-    const fetchProfile = async () => {
-      // Simulate delay and fetch logic
-      setTimeout(() => {
-        setProfile({
-          email: "15priya11jain@gmail.com",
-          mobile: "9329622029",
-          name: "Priya Jain",
-          gender: "Female",
-          city: "Indore",
-        });
-      }, 1000); // Simulated delay
-    };
-
-    fetchProfile();
-  }, []);
-
-  if (!profile) {
-    // Show a loading state if profile data is not yet available
-    return <div>Loading...</div>;
-  }
-
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
-    alert("Profile updated successfully!");
-    // Add your backend integration logic here.
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfile(updatedProfile); // Update the profile in the sidebar
   };
 
   return (
@@ -68,163 +53,36 @@ const ProfileDocumentPage = () => {
               <span>Paytm Wallet</span>
               <span className="text-red-500">&#x2716;</span>
             </li>
+            <li className={location.pathname === '/host-dashboard/my-account' ? 'text-green-600' : ''}>
+              <Link to="/host-dashboard/my-account">My Account</Link>
+            </li>
           </ul>
         </div>
 
         {/* Sidebar Options */}
-
         <ul className="space-y-4">
           <li className="text-lg font-semibold">Host Dashboard</li>
-          <li>
-            <NavLink
-              to="/host-dashboard/my-account"
-              className={({ isActive }) =>
-                isActive ? "text-green-600" : "text-gray-600"
-              }
-            >
-              My Account
-            </NavLink>
+          <li className={location.pathname === '/host-dashboard/manage-vehicles' ? 'text-green-600' : ''}>
+            <Link to="/host-dashboard/manage-vehicles">Manage Vehicles</Link>
           </li>
-          <li>
-            <NavLink
-              to="/host-dashboard/manage-vehicles"
-              className={({ isActive }) =>
-                isActive ? "text-green-600" : "text-gray-600"
-              }
-            >
-              Manage Vehicles
-            </NavLink>
+          <li className={location.pathname === '/host-dashboard/my-rentals' ? 'text-green-600' : ''}>
+            <Link to="/host-dashboard/my-rentals">My Rentals</Link>
           </li>
-          <li>
-            <NavLink
-              to="/host-dashboard/my-rentals"
-              className={({ isActive }) =>
-                isActive ? "text-green-600" : "text-gray-600"
-              }
-            >
-              My Rentals
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/host-dashboard/earnings"
-              className={({ isActive }) =>
-                isActive ? "text-green-600" : "text-gray-600"
-              }
-            >
-              Earnings
-            </NavLink>
+          <li className={location.pathname === '/host-dashboard/earnings' ? 'text-green-600' : ''}>
+            <Link to="/host-dashboard/earnings">Earnings</Link>
           </li>
         </ul>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4">
         <Routes>
           <Route path="manage-vehicles" element={<ManageVehicles />} />
           <Route path="my-rentals" element={<MyRentals />} />
           <Route path="earnings" element={<Earnings />} />
-          <Route path="my-account" element={<MyAccount profile={profile} />} />
-          {/* Default Route */}
           <Route
-            path="/"
-            element={
-              <div className="bg-white p-8 shadow-md rounded-lg">
-                <h1 className="text-2xl font-bold text-center mb-6">
-                  MY ACCOUNT
-                </h1>
-                <form onSubmit={handleUpdateProfile}>
-                  {/* Account Details */}
-                  <section className="mb-8">
-                    <h2 className="text-xl font-semibold">Account Details</h2>
-                    <div className="flex flex-col sm:flex-row justify-between items-center mt-4">
-                      <div className="w-full sm:w-1/2 mb-4 sm:mb-0">
-                        <label className="block text-gray-700">Email</label>
-                        <input
-                          type="email"
-                          value={profile.email}
-                          disabled
-                          className="w-full px-3 py-2 border rounded-lg bg-gray-100"
-                        />
-                      </div>
-                      <div className="w-full sm:w-1/2 sm:pl-4">
-                        <label className="block text-gray-700">Mobile *</label>
-                        <input
-                          type="text"
-                          value={profile.mobile}
-                          onChange={(e) =>
-                            setProfile({ ...profile, mobile: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border rounded-lg"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </section>
-
-                  {/* Personal Details */}
-                  <section className="mb-8">
-                    <h2 className="text-xl font-semibold">Personal Details</h2>
-                    <div className="flex flex-col sm:flex-row justify-between items-center mt-4">
-                      <div className="w-full sm:w-1/2 mb-4 sm:mb-0">
-                        <label className="block text-gray-700">Name *</label>
-                        <input
-                          type="text"
-                          value={profile.name}
-                          onChange={(e) =>
-                            setProfile({ ...profile, name: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border rounded-lg"
-                          required
-                        />
-                      </div>
-                      <div className="w-full sm:w-1/2 sm:pl-4">
-                        <label className="block text-gray-700">Gender</label>
-                        <select
-                          value={profile.gender}
-                          onChange={(e) =>
-                            setProfile({ ...profile, gender: e.target.value })
-                          }
-                          className="w-full px-3 py-2 border rounded-lg"
-                        >
-                          <option value="Female">Female</option>
-                          <option value="Male">Male</option>
-                        </select>
-                      </div>
-                    </div>
-                  </section>
-
-                  {/* Location Details */}
-                  <section className="mb-8">
-                    <h2 className="text-xl font-semibold">Location Details</h2>
-                    <div className="w-full">
-                      <label className="block text-gray-700">
-                        Please share your current city for optimized experience
-                      </label>
-                      <select
-                        value={profile.city}
-                        onChange={(e) =>
-                          setProfile({ ...profile, city: e.target.value })
-                        }
-                        className="w-full px-3 py-2 border rounded-lg"
-                      >
-                        <option value="Indore">Indore</option>
-                        <option value="Bhopal">Bhopal</option>
-                        <option value="Vidisha">Vidisha</option>
-                        <option value="Damoh">Damoh</option>
-                      </select>
-                    </div>
-                  </section>
-
-                  <button
-                    type="submit"
-                    className="w-1/12 bg-[#1E90FF] text-white py-2 rounded-lg hover:bg-[#1C86EE]"
-                  >
-                    UPDATE
-                  </button>
-                </form>
-              </div>
-            }
+            path="my-account"
+            element={<MyAccount profile={profile} onUpdateProfile={handleProfileUpdate} />}
           />
         </Routes>
       </div>

@@ -14,6 +14,7 @@ const AuthPage = () => {
     address: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false); // Loader state
   const navigate = useNavigate();
 
   const handleSignInSubmit = (e) => {
@@ -28,6 +29,7 @@ const AuthPage = () => {
 
   const handleRegisterOwnerSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Start loading
 
     try {
       const formData = new FormData(); // Use FormData to handle file uploads
@@ -35,23 +37,24 @@ const AuthPage = () => {
         formData.append(key, ownerData[key]);
       });
 
-      const response = await axios.post('http://localhost:8000/api/v1/owner/registerOwner',formData, {
+      const response = await axios.post('http://localhost:8000/api/v1/owner/registerOwner', formData, {
         headers: {
-          'Content-Type':'multipart/form-data',
+          'Content-Type': 'multipart/form-data',
         } // Send form data with files
       });
 
-      
-
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert('Owner registered successfully!');
+        setIsLoading(false); // Stop loading
         navigate("/HostDashboard"); // Navigate to Host Dashboard after Registration
       } else {
         alert(`Error: ${response.data.message}`);
+        setIsLoading(false); // Stop loading
       }
     } catch (error) {
       console.error('Error registering owner:', error);
       alert('There was an error registering the owner.');
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -163,9 +166,10 @@ const AuthPage = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-[#FFA500] text-white py-2 rounded-lg hover:bg-[#ff8c00]"
+              className="w-full bg-[#FFA500] text-white py-2 rounded-lg hover:bg-[#ff8c00] disabled:bg-gray-300"
+              disabled={isLoading}
             >
-              Register as Owner
+              {isLoading ? "Registering..." : "Register as Owner"}
             </button>
             <p className="text-center mt-4">
               Already registered?{" "}
